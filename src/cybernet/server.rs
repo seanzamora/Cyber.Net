@@ -19,8 +19,6 @@ impl Server {
 
             let buf = &mut buffer[..len];
 
-            // hook into server ingest and actions
-            // send action response
             socket.send_to(&buf, &addr)?;
         }
     }
