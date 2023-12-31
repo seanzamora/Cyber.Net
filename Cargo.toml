@@ -7,4 +7,4 @@ edition = "2021"
 bincode = { version = "1.3.3"} 
 clap = { version = "4.4.12", features = ["derive"] }
 serde = { version = "1.0.193", features = ["derive"] }
-derive-macro = { path = "derive-macro"}
+derive-macro = { path = "./src/derive-macro"}
