@@ -7,19 +7,17 @@ pub struct Client {
 }
 
 impl Client {
-    pub fn send(&self, line: &'static str) -> Result<()> {
+    pub fn send(&self, line: &[u8]) -> Result<Vec<u8>> {
         let net = format!("{}:{}", self.address, self.port);
 
         let socket = UdpSocket::bind("[::]:0")?;
 
-        socket.send_to(line.as_bytes(), net).expect("Error on send");
+        socket.send_to(line, net).expect("Error on send");
 
         let mut buf = [0; 2048];
 
         let (len, _src) = socket.recv_from(&mut buf)?;
 
-        println!("Echo {:?}", str::from_utf8(&buf[..len]).unwrap());
-
-        Ok(())
+        Ok(buf[..len].to_vec())
     }
 }

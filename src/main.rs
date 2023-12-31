@@ -2,6 +2,7 @@ mod cybernet;
 
 use clap::Parser;
 use cybernet::{client::Client, server::Server};
+use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Debug)]
 #[clap(
@@ -17,8 +18,17 @@ struct Args {
     server: bool,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct Test {
+    test: String,
+}
+
 fn main() {
     let args = Args::parse();
+
+    let test = Test {
+        test: "me".to_string(),
+    };
 
     if args.client {
         let client = Client {
@@ -26,7 +36,13 @@ fn main() {
             port: "2000",
         };
 
-        let _ = client.send("Testing");
+        let data: Vec<u8> = bincode::serialize(&test).unwrap();
+
+        let res: Vec<u8> = client.send(&data).unwrap();
+
+        let test: Test = bincode::deserialize(&res[..]).unwrap();
+
+        println!("{test:?}")
     }
 
     if args.server {

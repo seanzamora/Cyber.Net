@@ -1,6 +1,8 @@
 use std::str;
 use std::{io::Result, net::UdpSocket};
 
+use crate::Test;
+
 pub struct Server {
     pub address: &'static str,
     pub port: &'static str,
@@ -12,17 +14,18 @@ impl Server {
 
         let socket = UdpSocket::bind(net)?;
 
-        let mut buf = [0; 1024];
+        let mut buffer = [0; 1024];
 
         loop {
-            let (len, addr) = socket.recv_from(&mut buf)?;
+            let (len, addr) = socket.recv_from(&mut buffer)?;
 
-            let buf = &mut buf[..len];
+            let buf = &mut buffer[..len];
 
             socket.send_to(&buf, &addr)?;
 
-            println!("{:?} received from {:?}.", len, addr);
-            println!("{:?} data received.", str::from_utf8(&buf[..len]));
+            let test: Test = bincode::deserialize(&buf[..]).unwrap();
+
+            println!("Reveived {test:?} from {addr:?}");
         }
     }
 }
