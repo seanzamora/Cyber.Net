@@ -26,21 +26,21 @@ struct Test {
 fn main() {
     let args = Args::parse();
 
-    // let test = Test {
-    //     test: "me".to_string(),
-    // };
+    let test = Test {
+        test: "me".to_string(),
+    };
 
     if args.client {
-        let _client = Client {
+        let client = Client {
             address: "127.0.0.1",
             port: "2000",
         };
 
-        // loop {
-        //     let res: Vec<u8> = client.send(&test.serialize()).unwrap();
-        //     let dec: Test = Test::deserialize(res);
-        //     println!("{dec:?}")
-        // }
+        loop {
+            let res: Vec<u8> = client.send(&test.serialize()).unwrap();
+            let dec: Test = Test::deserialize(res);
+            println!("{dec:?}")
+        }
     }
 
     if args.server {

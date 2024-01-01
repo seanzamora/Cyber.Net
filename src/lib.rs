@@ -1,4 +1,4 @@
-pub mod cybernet;
+mod cybernet;
 
 pub use cybernet::{Client, Server};
 pub use derive_macro::Bincode;
