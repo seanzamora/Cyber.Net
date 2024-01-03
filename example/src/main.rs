@@ -1,7 +1,7 @@
 extern crate cybernet;
 
 use clap::Parser;
-use cybernet::{Bincode, Client, Server};
+use cybernet::{Bincode, Client, Message, MessageAction, Server};
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Debug)]
@@ -26,20 +26,24 @@ struct Test {
 fn main() {
     let args = Args::parse();
 
-    let test = Test {
-        test: "me".to_string(),
-    };
-
     if args.client {
         let client = Client {
             address: "127.0.0.1",
             port: "2000",
         };
 
+        let msg = Message::<Test> {
+            action: MessageAction::Movement,
+            data: Test {
+                test: "me".to_string(),
+            },
+        };
+        let mut x = 0;
         loop {
-            let res: Vec<u8> = client.send(&test.serialize()).unwrap();
-            let dec: Test = Test::deserialize(res);
-            println!("{dec:?}")
+            let res: Vec<u8> = client.send(&msg).unwrap();
+            let dec: Message<Test> = Message::deserialize(res);
+            x += 1;
+            println!("{dec:?}{x:?}")
         }
     }
 
