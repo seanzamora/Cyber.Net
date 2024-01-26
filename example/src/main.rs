@@ -38,6 +38,7 @@ fn main() {
                 test: "me".to_string(),
             },
         };
+
         let mut x = 0;
         loop {
             let res: Vec<u8> = client.send(&msg).unwrap();
